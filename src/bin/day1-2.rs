@@ -17,60 +17,61 @@ fn main() {
     }
 }
 
-fn count_line(x: &str) -> i32 {
+fn count_line(x: String) -> i32 {
     let n: Vec<i32> = x
         .chars()
         .filter_map(|x| x.to_string().parse::<i32>().ok())
         .collect();
 
-    if n.len() == 1 {
-        10 * n[0] + n[0]
-    } else if n.len() > 1 {
-        10 * n[0] + n[n.len() - 1]
-    } else {
-        0
+    let first = n.first().unwrap();
+    let last = n.last().unwrap();
+
+    match n.len() {
+        1 => 10 * first + first,
+        0 => 0,
+        _ => 10 * first + last,
     }
 }
 
 fn parse_row(s: &str) -> i32 {
-    let list: [(&str, Vec<_>, &str); 18] = [
-        ("one", s.match_indices("one").collect(), "1"),
-        ("two", s.match_indices("two").collect(), "2"),
-        ("three", s.match_indices("three").collect(), "3"),
-        ("four", s.match_indices("four").collect(), "4"),
-        ("five", s.match_indices("five").collect(), "5"),
-        ("six", s.match_indices("six").collect(), "6"),
-        ("seven", s.match_indices("seven").collect(), "7"),
-        ("eight", s.match_indices("eight").collect(), "8"),
-        ("nine", s.match_indices("nine").collect(), "9"),
-        ("1", s.match_indices("1").collect(), "1"),
-        ("2", s.match_indices("2").collect(), "2"),
-        ("3", s.match_indices("3").collect(), "3"),
-        ("4", s.match_indices("4").collect(), "4"),
-        ("5", s.match_indices("5").collect(), "5"),
-        ("6", s.match_indices("6").collect(), "6"),
-        ("7", s.match_indices("7").collect(), "7"),
-        ("8", s.match_indices("8").collect(), "8"),
-        ("9", s.match_indices("9").collect(), "9"),
+    let list: [(Vec<_>, &str); 18] = [
+        (s.match_indices("one").collect(), "1"),
+        (s.match_indices("two").collect(), "2"),
+        (s.match_indices("three").collect(), "3"),
+        (s.match_indices("four").collect(), "4"),
+        (s.match_indices("five").collect(), "5"),
+        (s.match_indices("six").collect(), "6"),
+        (s.match_indices("seven").collect(), "7"),
+        (s.match_indices("eight").collect(), "8"),
+        (s.match_indices("nine").collect(), "9"),
+        (s.match_indices("1").collect(), "1"),
+        (s.match_indices("2").collect(), "2"),
+        (s.match_indices("3").collect(), "3"),
+        (s.match_indices("4").collect(), "4"),
+        (s.match_indices("5").collect(), "5"),
+        (s.match_indices("6").collect(), "6"),
+        (s.match_indices("7").collect(), "7"),
+        (s.match_indices("8").collect(), "8"),
+        (s.match_indices("9").collect(), "9"),
     ];
 
-    let mut re: Vec<(usize, &str)> = vec![];
+    let mut result: Vec<(usize, &str)> = vec![];
 
-    for (_, m, val) in list {
+    for (m, val) in list {
         for (idx, _) in m {
-            re.push((idx, val))
+            result.push((idx, val))
         }
     }
 
-    re.sort_by(|a, b| a.0.cmp(&b.0));
+    result.sort_by(|a, b| a.0.cmp(&b.0));
 
-    let st = re
+    let str_list = result
         .into_iter()
         .map(|(_, s)| s)
         .collect::<Vec<&str>>()
         .join("");
 
-    count_line(&st.as_str())
+    count_line(str_list)
 }
 
 fn solve(input: String) -> i32 {
